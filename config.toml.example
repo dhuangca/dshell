@@ -1,0 +1,57 @@
+# dshell Configuration File
+# Copy this file to ~/.config/dshell/config.toml to use it
+
+# List of interactive commands that need direct terminal access
+# These commands will run with full terminal control (stdin/stdout/stderr)
+interactive_commands = [
+    "claude",
+    "ollama",
+    "vim",
+    "nvim",
+    "nano",
+    "emacs",
+    "less",
+    "more",
+    "top",
+    "htop",
+    "man",
+    "python",
+    "node",
+    "irb",
+    "ssh",
+    "bash",
+    "sh",
+]
+
+# Additional paths to allow access to for isolated commands
+# These paths will have read-write access even when Landlock isolation is enabled
+# Use this to grant access to config files, tools, or data directories
+additional_allowed_paths = [
+    # Claude Code configuration and data
+    "~/.claude",           # Claude config directory
+    "~/.claude.json",      # Claude config file
+    "~/.nvm",              # Node Version Manager (needed for Claude binary)
+    "~/.npm",              # npm cache and config
+    "/dev/null",
+    "~/.cargo",            # Rust package manager
+    "~/.local/bin",        # Local user binaries
+    "~/.rustup",           # Rust toolchain manager
+
+    # Add your own paths here, for example:
+    # "~/.config/myapp",
+    # "~/.local/share/myapp",
+    # "~/.ssh",
+    # "~/.git",
+]
+
+# Paths to explicitly deny access to for isolated commands
+# These take precedence over allowed paths
+# Use this to block access to sensitive directories
+denied_paths = [
+    # Examples (uncomment to use):
+    # "~/.ssh",              # SSH keys
+    # "~/.gnupg",            # GPG keys
+    # "~/.aws",              # AWS credentials
+    # "~/.config/gcloud",    # Google Cloud credentials
+    # "~/sensitive-data",    # Your sensitive files
+]
