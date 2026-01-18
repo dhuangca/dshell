@@ -67,7 +67,9 @@ impl Executor {
 
                 let stderr = String::from_utf8_lossy(&output.stderr);
                 for line in stderr.lines() {
-                    lines.push(format!("Error: {}", line));
+                    // Don't prefix with "Error:" - stderr contains all diagnostic output,
+                    // not just errors (progress messages, warnings, info, etc.)
+                    lines.push(line.to_string());
                 }
 
                 CommandResult {

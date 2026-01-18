@@ -208,7 +208,46 @@ dshell> exit
 $
 ```
 
+## Claude Code Configuration
+
+If you need to configure Claude Code to use a specific HOME directory, add the following to your Claude Code settings:
+
+**File location:** `.claude/settings.json` (in your project) or `~/.claude/settings.json` (global)
+
+```json
+{
+  "env": {
+    "HOME": "/home/dandan"
+  }
+}
+```
+
+This ensures Claude Code uses the correct HOME path for all commands. See [Claude Code settings documentation](https://code.claude.com/docs/en/settings) for more details.
+
 ## Troubleshooting
+
+### Build fails with "linker `cc` not found"?
+
+If you encounter linker errors during build, you may need to configure cargo to use your system's GCC linker explicitly.
+
+Create `.cargo/config.toml` in your project directory:
+
+```toml
+[target.x86_64-unknown-linux-gnu]
+linker = "/usr/bin/gcc"
+```
+
+**Note:** This configuration is **target-specific** and only affects builds for `x86_64-unknown-linux-gnu` (64-bit Linux). It will not impact builds for other platforms like Windows, macOS, or ARM architectures. Each platform uses its own default linker.
+
+For CI/CD or temporary builds, you can also use an environment variable:
+```bash
+CARGO_TARGET_X86_64_UNKNOWN_LINUX_GNU_LINKER=/usr/bin/gcc cargo build
+```
+
+Or ensure `/usr/bin` is in your PATH when building:
+```bash
+PATH="/usr/bin:$PATH" cargo build
+```
 
 ### Landlock not available?
 
