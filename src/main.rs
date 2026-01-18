@@ -129,12 +129,8 @@ impl App {
     fn run(&mut self) -> io::Result<()> {
         // Check if stdin is a TTY
         if !io::stdin().is_tty() {
-            return Err(io::Error::new(
-                io::ErrorKind::Other,
-                "dshell requires a TTY (interactive terminal).\n\
-                 It cannot read from pipes or files.\n\
-                 Please run it directly in a terminal.",
-            ));
+            // Non-interactive mode: read from stdin
+            return self.run_non_interactive();
         }
 
         // Enter raw mode
@@ -153,6 +149,37 @@ impl App {
         execute!(io::stdout(), crossterm::cursor::MoveTo(0, 0))?;
 
         result
+    }
+
+    fn run_non_interactive(&mut self) -> io::Result<()> {
+        use std::io::BufRead;
+
+        // Print initial output (welcome message, etc.)
+        for line in self.renderer.get_new_output() {
+            println!("{}", line);
+        }
+
+        let stdin = io::stdin();
+        for line in stdin.lock().lines() {
+            let command = line?;
+
+            // Skip empty lines
+            if command.trim().is_empty() {
+                continue;
+            }
+
+            // Process command
+            if !self.handle_command(&command)? {
+                break;
+            }
+
+            // Print new output
+            for line in self.renderer.get_new_output() {
+                println!("{}", line);
+            }
+        }
+
+        Ok(())
     }
 
     fn event_loop(&mut self) -> io::Result<()> {

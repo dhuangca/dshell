@@ -10,12 +10,14 @@ use std::io::{self, Write};
 
 pub struct TerminalRenderer {
     output_buffer: Vec<String>,
+    last_printed_index: usize,
 }
 
 impl TerminalRenderer {
     pub fn new(welcome_message: String) -> Self {
         TerminalRenderer {
             output_buffer: vec![welcome_message],
+            last_printed_index: 0,
         }
     }
 
@@ -91,5 +93,12 @@ impl TerminalRenderer {
         execute!(io::stdout(), terminal::Clear(ClearType::All))?;
         execute!(io::stdout(), cursor::MoveTo(0, 0))?;
         Ok(())
+    }
+
+    /// Get new output lines that haven't been printed yet (for non-interactive mode)
+    pub fn get_new_output(&mut self) -> Vec<String> {
+        let new_lines = self.output_buffer[self.last_printed_index..].to_vec();
+        self.last_printed_index = self.output_buffer.len();
+        new_lines
     }
 }
