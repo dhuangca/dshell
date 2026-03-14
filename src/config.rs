@@ -46,6 +46,7 @@ const DEFAULT_ADDITIONAL_ALLOWED_PATHS: &[&str] = &[
     "/dev/null",
     "~/.cargo",            // Rust package manager (needed for building Claude binary)
     "~/.local/bin",        // Local user binaries
+    "~/.local/share/claude", // Claude Code binary (symlink target)
     "~/.rustup",          // Rust toolchain manager
 ];
 
