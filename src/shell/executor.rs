@@ -183,7 +183,7 @@ impl Executor {
 
             // Only add if not denied
             if !denied_paths_set.contains(&expanded) {
-                allowed_paths.push(path.clone());
+                allowed_paths.push(expanded);
             }
         }
 
